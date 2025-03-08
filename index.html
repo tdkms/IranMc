@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ایران MC - سرور ماینکرفت SMP</title>
     <style>
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('yekan.woff2') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Vazir', Arial, sans-serif;
+            font-family: 'MyCustomFont', Arial, sans-serif;
             transition: all 0.3s ease;
         }
 
@@ -31,12 +38,140 @@
             color: var(--text);
             direction: rtl;
             overflow-x: hidden;
+            position: relative;
         }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -2;
+        }
+
+        .stars {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--opacity); transform: scale(1); }
+        }
+
+        .minecraft-block {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            animation: floatBlock var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            opacity: 0;
+        }
+
+        .block-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            border-radius: 4px;
+        }
+
+        @keyframes floatBlock {
+            0% {
+                transform: translateY(100vh) translateX(var(--startX)) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--opacity);
+            }
+            90% {
+                opacity: var(--opacity);
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(var(--startX) + var(--drift))) rotate(var(--rotation));
+                opacity: 0;
+            }
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            opacity: 0.3;
+            animation: float-particle var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            box-shadow: 0 0 5px var(--accent);
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) translateX(var(--startX));
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--opacity);
+            }
+            90% {
+                opacity: var(--opacity);
+            }
+            100% {
+                transform: translateY(-50px) translateX(calc(var(--startX) + var(--drift)));
+                opacity: 0;
+            }
+        }
+
+        /* End Animated Background */
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         header {
@@ -84,6 +219,7 @@
                         0 0 0 1px rgba(255, 255, 255, 0.05) inset,
                         0 5px 15px rgba(2, 132, 199, 0.15);
             transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(5px);
         }
 
         .connect-card::before {
@@ -205,9 +341,8 @@
 
         .version-tag {
             position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
+            bottom: 8px;
+            right: 8px;
             background-color: var(--accent);
             color: white;
             padding: 4px 8px;
@@ -215,6 +350,7 @@
             font-size: 0.7rem;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            direction: ltr;
         }
 
         .copy-btn {
@@ -238,6 +374,11 @@
             background-color: var(--accent-dark);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(2, 132, 199, 0.4);
+        }
+        
+        .copy-btn.copied {
+            background-color: var(--success);
+            animation: successPulse 1s;
         }
 
         .copy-btn:active {
@@ -341,6 +482,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 
                         0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            backdrop-filter: blur(5px);
         }
 
         .players-title {
@@ -447,6 +589,8 @@
             text-align: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .feature-item:hover {
@@ -464,32 +608,72 @@
             margin: 40px 0;
             padding: 40px;
             background-color: var(--secondary);
-            border-radius: 10px;
+            border-radius: 16px;
             position: relative;
             overflow: hidden;
             opacity: 0;
             transform: scale(0.9);
             animation: scaleIn 1s forwards 1.5s;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 
+                       0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            backdrop-filter: blur(5px);
         }
 
         .join-section::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            top: -200%;
+            left: -200%;
+            width: 400%;
+            height: 400%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(14, 165, 233, 0.05), 
+                rgba(14, 165, 233, 0.1), 
+                rgba(14, 165, 233, 0.05), 
+                transparent);
             transform: rotate(45deg);
-            animation: shine 3s infinite;
+            animation: gamingShine 8s infinite linear;
+            z-index: 0;
+        }
+        
+        .join-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center bottom, rgba(14, 165, 233, 0.2), transparent 70%);
+            z-index: 0;
+        }
+        
+        .join-section h2 {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            color: var(--text);
+            text-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
+            animation: pulse 3s infinite;
+        }
+        
+        .join-section p {
+            position: relative;
+            z-index: 1;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .join-btn {
-            background-color: var(--success);
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
             color: white;
             border: none;
             padding: 15px 30px;
-            border-radius: 5px;
+            border-radius: 12px;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
@@ -497,6 +681,9 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .join-btn::before {
@@ -506,18 +693,37 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
+            background: linear-gradient(
+                90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            animation: gamingButtonShine 3s infinite;
+            z-index: -1;
+        }
+        
+        .join-btn::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            border-radius: 12px 12px 0 0;
+            opacity: 0.5;
             z-index: -1;
         }
 
-        .join-btn:hover::before {
-            left: 100%;
-        }
-
         .join-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.5);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(14, 165, 233, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        }
+        
+        .join-btn:active {
+            transform: translateY(0) scale(0.98);
         }
 
         footer {
@@ -526,6 +732,8 @@
             margin-top: 40px;
             opacity: 0;
             animation: fadeIn 1s forwards 2s;
+            position: relative;
+            z-index: 1;
         }
 
         .social-links {
@@ -550,23 +758,6 @@
         .social-link:hover {
             background-color: var(--accent);
             transform: translateY(-3px);
-        }
-
-        .floating-blocks {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .block {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: rgba(52, 152, 219, 0.1);
-            animation: float 15s infinite linear;
         }
 
         .spinner {
@@ -646,14 +837,38 @@
             }
         }
 
-        @keyframes shine {
+        @keyframes gamingShine {
             0% {
-                top: -50%;
-                left: -50%;
+                top: -200%;
+                left: -200%;
             }
             100% {
-                top: 150%;
-                left: 150%;
+                top: 200%;
+                left: 200%;
+            }
+        }
+        
+        @keyframes gamingButtonShine {
+            0% {
+                left: -100%;
+            }
+            20% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        @keyframes successPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
             }
         }
 
@@ -681,23 +896,6 @@
         @keyframes spin {
             to {
                 transform: rotate(360deg);
-            }
-        }
-        
-        @keyframes floatBlock {
-            0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.3;
-            }
-            90% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(-100px) translateX(100px) rotate(360deg);
-                opacity: 0;
             }
         }
 
@@ -760,13 +958,16 @@
     </style>
 </head>
 <body>
-    <div class="floating-blocks">
-        <!-- Will be populated by JS -->
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-gradient"></div>
+        <div class="stars" id="stars"></div>
+        <div class="floating-particles" id="floating-particles"></div>
     </div>
 
     <div class="container">
         <header>
-            <h1 class="logo">ایران MC</h1>
+            <h1 class="logo">ایران امسی</h1>
             <p class="tagline">بهترین تجربه بقا و ساخت و ساز با دوستان در سرور SMP ایرانی</p>
         </header>
 
@@ -807,7 +1008,7 @@
             </div>
 
             <div class="players-card">
-                <h3 class="players-title">بازیکنان فعال</h3>
+                <h3 class="players-title">بازیکنان آنلاین</h3>
                 <div class="player-list" id="player-list">
                     <!-- Will be filled by JS -->
                 </div>
@@ -843,83 +1044,165 @@
         <section class="join-section">
             <h2>به ما بپیوندید!</h2>
             <p>برای اطلاع از آخرین اخبار و رویدادهای سرور، به گروه تلگرام ما ملحق شوید</p>
-            <button class="join-btn" onclick="window.open('https://t.me/yourservergrouplink', '_blank')">
+            <button class="join-btn" onclick="window.open('https://t.me/+Jc4tmw2Y2uszMTQ0', '_blank')">
                 پیوستن به گروه تلگرام
             </button>
         </section>
 
         <footer>
             <p>تمامی حقوق محفوظ است &copy; 2025</p>
-            <div class="social-links">
-                <a href="https://t.me/yourservergrouplink" class="social-link" target="_blank">
-                    <span>گروه تلگرام</span>
-                </a>
-            </div>
         </footer>
     </div>
 
-    <!-- Remove unused debug display -->
-
     <script>
-        // Immediately execute this code to test if JavaScript is running
-        console.log("SCRIPT STARTED - THIS SHOULD APPEAR IN CONSOLE");
-        
-        // Create floating Minecraft-like blocks
-        function createFloatingBlocks() {
-            console.log("Creating floating blocks");
-            const container = document.querySelector('.floating-blocks');
+        // Create starry sky background
+        function createStars() {
+            const stars = document.getElementById('stars');
+            const count = window.innerWidth < 768 ? 100 : 200;
             
-            for (let i = 0; i < 15; i++) {
-                const block = document.createElement('div');
-                block.classList.add('minecraft-block');
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
                 
                 // Random position
                 const x = Math.random() * 100;
+                const y = Math.random() * 100;
                 
-                // Random speed
-                const duration = 15 + Math.random() * 20;
+                // Random size
+                const size = Math.random() * 2 + 1;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.8 + 0.2;
+                
+                // Random duration
+                const duration = 2 + Math.random() * 3;
                 
                 // Random delay
-                const delay = Math.random() * 10;
+                const delay = Math.random() * 5;
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--opacity', opacity);
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.setProperty('--delay', `${delay}s`);
+                
+                stars.appendChild(star);
+            }
+        }
+
+        // Create floating Minecraft-like blocks
+        function createFloatingBlocks() {
+            const container = document.getElementById('floating-particles');
+            const blockColors = ['#8B5A2B', '#A9A9A9', '#567D46', '#8B4513', '#1CA3EC', '#5D4037', '#607D8B'];
+            
+            for (let i = 0; i < 20; i++) {
+                const block = document.createElement('div');
+                block.classList.add('minecraft-block');
+                
+                // Create texture overlay
+                const texture = document.createElement('div');
+                texture.classList.add('block-texture');
+                block.appendChild(texture);
+                
+                // Random position
+                const startX = Math.random() * 100;
+                
+                // Random drift
+                const drift = (Math.random() - 0.5) * 50;
+                
+                // Random size
+                const size = Math.random() * 20 + 15;
+                
+                // Random speed
+                const duration = 15 + Math.random() * 25;
+                
+                // Random delay
+                const delay = Math.random() * 15;
                 
                 // Random rotation
                 const rotation = Math.random() * 360;
                 
-                // Random block type (just using different colors for simplicity)
-                const colors = ['#8B5A2B', '#A9A9A9', '#567D46', '#8B4513', '#1CA3EC'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
+                // Random opacity
+                const opacity = Math.random() * 0.3 + 0.1;
                 
-                block.style.left = `${x}%`;
+                // Random color
+                const color = blockColors[Math.floor(Math.random() * blockColors.length)];
+                
+                block.style.width = `${size}px`;
+                block.style.height = `${size}px`;
                 block.style.backgroundColor = color;
-                block.style.animationDuration = `${duration}s`;
-                block.style.animationDelay = `${delay}s`;
-                block.style.transform = `rotate(${rotation}deg)`;
+                block.style.setProperty('--startX', `${startX}%`);
+                block.style.setProperty('--drift', `${drift}%`);
+                block.style.setProperty('--duration', `${duration}s`);
+                block.style.setProperty('--delay', `${delay}s`);
+                block.style.setProperty('--rotation', `${rotation}deg`);
+                block.style.setProperty('--opacity', opacity);
                 
                 container.appendChild(block);
+            }
+            
+            // Add particles
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random position
+                const startX = Math.random() * 100;
+                
+                // Random drift
+                const drift = (Math.random() - 0.5) * 30;
+                
+                // Random size
+                const size = Math.random() * 3 + 1;
+                
+                // Random speed
+                const duration = 8 + Math.random() * 12;
+                
+                // Random delay
+                const delay = Math.random() * 10;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.4 + 0.1;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.setProperty('--startX', `${startX}%`);
+                particle.style.setProperty('--drift', `${drift}%`);
+                particle.style.setProperty('--duration', `${duration}s`);
+                particle.style.setProperty('--delay', `${delay}s`);
+                particle.style.setProperty('--opacity', opacity);
+                
+                container.appendChild(particle);
             }
         }
 
         // Function to copy server IP to clipboard
         function copyServerIP() {
-            console.log("Copy button clicked");
             const serverIP = document.getElementById('server-ip').textContent;
+            const copyBtn = document.querySelector('.copy-btn');
+            
             navigator.clipboard.writeText(serverIP).then(() => {
+                // Visual feedback through CSS
+                copyBtn.classList.add('copied');
+                
+                // Text feedback
                 const copyText = document.getElementById('copy-text');
                 const successText = document.getElementById('success-text');
                 
                 copyText.style.display = 'none';
                 successText.style.display = 'inline';
                 
+                // Reset after delay
                 setTimeout(() => {
                     copyText.style.display = 'inline';
                     successText.style.display = 'none';
+                    copyBtn.classList.remove('copied');
                 }, 2000);
             });
         }
 
-        // CORS Proxy URL to help with localhost testing
-        const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
-        
         // Static server data in case API fails
         const STATIC_SERVER_DATA = {
             "online": true,
@@ -931,10 +1214,7 @@
         };
 
         // Function to fetch server data with fallback
-        function fetchServerData(attemptNumber) {
-            attemptNumber = attemptNumber || 1;
-            console.log("Fetching server data, attempt:", attemptNumber);
-            
+        function fetchServerData() {
             // Show loading indicator
             var countElement = document.getElementById('online-count');
             if (countElement) {
@@ -943,7 +1223,6 @@
             
             // Set a timeout to force fallback if fetch takes too long
             var fetchTimeout = setTimeout(function() {
-                console.log("Fetch timeout - using fallback data");
                 handleServerData(STATIC_SERVER_DATA);
             }, 5000);
             
@@ -951,31 +1230,19 @@
             var timestamp = new Date().getTime();
             var apiUrl = 'https://api.mcsrvstat.us/3/212.80.8.107?' + timestamp;
             
-            // Try direct fetch first
+            // Try direct fetch
             fetch(apiUrl)
                 .then(function(response) {
                     clearTimeout(fetchTimeout);
-                    console.log("Got response:", response);
                     return response.json();
                 })
                 .then(function(data) {
-                    console.log("Got server data:", data);
                     handleServerData(data);
                 })
                 .catch(function(error) {
-                    console.error("Error fetching server data:", error);
-                    
-                    // If this was the first attempt, try with CORS proxy
-                    if (attemptNumber === 1) {
-                        console.log("Retrying with CORS proxy");
-                        clearTimeout(fetchTimeout);
-                        fetchServerData(2);
-                    } else {
-                        // Use static data if both attempts fail
-                        console.log("Using fallback static data");
-                        clearTimeout(fetchTimeout);
-                        handleServerData(STATIC_SERVER_DATA);
-                    }
+                    // Use static data on error
+                    clearTimeout(fetchTimeout);
+                    handleServerData(STATIC_SERVER_DATA);
                 });
         }
         
@@ -983,45 +1250,36 @@
         function handleServerData(data) {
             // Server online check
             if (data.online) {
-                console.log("Server is online");
-                
                 // Set player count
                 if (data.players && typeof data.players.online !== 'undefined') {
                     const playerCount = data.players.online;
-                    console.log("Player count:", playerCount);
                     
-                    // Force update with actual number
+                    // Update count display
                     var countElement = document.getElementById('online-count');
                     if (countElement) {
                         countElement.textContent = playerCount;
-                        console.log("Updated count element to:", playerCount);
                     }
                     
                     // Update player list
                     var playerList = document.getElementById('player-list');
                     if (playerList) {
                         if (data.players.list && data.players.list.length > 0) {
-                            console.log("Player list available");
                             let playerHtml = '';
                             data.players.list.forEach(function(player, index) {
                                 playerHtml += '<div class="player" style="--i:' + index + '">' + player.name + '</div>';
                             });
                             playerList.innerHTML = playerHtml;
                         } else if (playerCount > 0) {
-                            console.log("Players online but no list");
                             playerList.innerHTML = '<div class="player">بازیکنان در حال بازی</div>';
                         } else {
-                            console.log("No players online");
                             playerList.innerHTML = '<div class="no-players-msg">هیچ بازیکنی آنلاین نیست</div>';
                         }
                     }
                 } else {
-                    console.log("No player data");
                     document.getElementById('online-count').textContent = '0';
                     document.getElementById('player-list').innerHTML = '<div class="no-players-msg">اطلاعات بازیکنان در دسترس نیست</div>';
                 }
             } else {
-                console.log("Server is offline");
                 document.getElementById('online-count').textContent = '0';
                 document.getElementById('player-list').innerHTML = '<div class="no-players-msg">سرور در حال حاضر آفلاین است</div>';
             }
@@ -1029,21 +1287,11 @@
 
         // Initialize on page load
         window.onload = function() {
-            console.log("Window loaded");
+            createStars();
             createFloatingBlocks();
-            
-            // Try to fetch server data with timeout fallback
             fetchServerData();
             
             // Refresh every 60 seconds
             setInterval(fetchServerData, 60000);
         };
-        
-        // Also use DOMContentLoaded as a backup
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOMContentLoaded fired");
-        });
-        
-        // Log that script loaded
-        console.log("SCRIPT LOADED COMPLETELY");
     </script>
