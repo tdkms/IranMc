@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ایران MC - آموزش ورود به سرور</title>
+    <style>
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('yekan.woff2') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'MyCustomFont', Arial, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #0ea5e9;
+            --accent-dark: #0284c7;
+            --text: #f1f5f9;
+            --success: #10b981;
+            --card-bg: #1e293b;
+            --button-hover: #06b6d4;
+            --surface: #334155;
+            --overlay: rgba(15, 23, 42, 0.9);
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            direction: rtl;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -2;
+        }
+
+        .stars {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--opacity); transform: scale(1); }
+        }
+
+        .minecraft-block {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            animation: floatBlock var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            opacity: 0;
+        }
+
+        .block-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            border-radius: 4px;
+        }
+
+        @keyframes floatBlock {
+            0% {
+                transform: translateY(100vh) translateX(var(--startX)) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--opacity);
+            }
+            90% {
+                opacity: var(--opacity);
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(var(--startX) + var(--drift))) rotate(var(--rotation));
+                opacity: 0;
+            }
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            opacity: 0.3;
+            animation: float-particle var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            box-shadow: 0 0 5px var(--accent);
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) translateX(var(--startX));
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--opacity);
+            }
+            90% {
+                opacity: var(--opacity);
+            }
+            100% {
+                transform: translateY(-50px) translateX(calc(var(--startX) + var(--drift)));
+                opacity: 0;
+            }
+        }
+        /* End Animated Background */
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 1s forwards 0.5s;
+        }
+
+        .go-back {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text);
+            text-decoration: none;
+            background-color: rgba(14, 165, 233, 0.1);
+            padding: 8px 16px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 1s forwards 0.7s;
+        }
+
+        .go-back:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .go-back svg {
+            margin-left: 10px;
+        }
+
+        .tutorial-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 1s forwards 0.8s;
+        }
+
+        .option-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 
+                        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            height: 300px;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.2), transparent 25%);
+            z-index: 0;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.07) inset,
+                        0 5px 20px rgba(2, 132, 199, 0.25);
+        }
+
+        .option-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 2.5rem;
+            color: var(--accent);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .option-card:hover .option-icon {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+
+        .option-content {
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .option-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .option-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .option-card:hover .option-title::after {
+            width: 80px;
+        }
+
+        .option-desc {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .option-btn:hover::before {
+            left: 100%;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
+        }
+
+        /* Tutorial Content Styles */
+        .tutorial-content {
+            margin-top: 20px;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .tutorial-content.active {
+            opacity: 1;
+            max-height: 5000px; /* Large enough to fit all content */
+            margin-bottom: 50px;
+        }
+
+        .tutorial-panel {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 
+                        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: slideUp 0.5s forwards;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tutorial-panel::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.2), transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-title {
+            font-size: 1.6rem;
+            margin-right: 15px;
+            position: relative;
+        }
+
+        .panel-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 3px;
+        }
+
+        .panel-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .step-list {
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-item {
+            position: relative;
+            padding-right: 50px;
+            padding-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .step-item.active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.5s ease;
+        }
+
+        .step-number {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 35px;
+            height: 35px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .step-desc {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+        }
+
+        .step-img {
+            width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .step-img:hover {
+            opacity: 1;
+            transform: scale(1.01);
+        }
+
+        .step-note {
+            background-color: rgba(14, 165, 233, 0.1);
+            border-right: 3px solid var(--accent);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .step-note strong {
+            color: var(--accent);
+        }
+
+        .timeline {
+            position: absolute;
+            top: 0;
+            right: 17px;
+            width: 2px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        .tip-box {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Removed light bulb icon */
+
+        .tip-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--surface);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-size: 1.2rem;
+            z-index: 2;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn:hover {
+            background-color: #e53e3e;
+            transform: rotate(90deg);
+            box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        /* Animations */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(14, 165, 233, 0.8), 0 0 30px rgba(14, 165, 233, 0.6);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 1s forwards 2s;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .tutorial-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .option-card {
+                height: 250px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .panel-icon {
+                margin-bottom: 15px;
+            }
+            
+            .panel-title {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .step-item {
+                padding-right: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-gradient"></div>
+        <div class="stars" id="stars"></div>
+        <div class="floating-particles" id="floating-particles"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 class="logo">ایران امسی</h1>
+            <p class="tagline">آموزش ورود به سرور</p>
+        </header>
+
+        <a href="/" class="go-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            بازگشت به صفحه اصلی
+        </a>
+
+        <div class="tutorial-options">
+            <div class="option-card" onclick="showTutorial('pc')">
+                <div class="option-icon">💻</div>
+                <div class="option-content">
+                    <h2 class="option-title">ورود با پیسی</h2>
+                    <p class="option-desc">آموزش اتصال به سرور با کامپیوتر و نسخه جاوا</p>
+                    <button class="option-btn">مشاهده آموزش</button>
+                </div>
+            </div>
+
+            <div class="option-card" onclick="showTutorial('mobile')">
+                <div class="option-icon">📱</div>
+                <div class="option-content">
+                    <h2 class="option-title">ورود با موبایل</h2>
+                    <p class="option-desc">آموزش اتصال به سرور با گوشی و نسخه بدراک</p>
+                    <button class="option-btn">مشاهده آموزش</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PC Tutorial Content -->
+        <div id="pc-tutorial" class="tutorial-content">
+            <div class="tutorial-panel">
+                <button class="close-btn" onclick="hideTutorial('pc')">×</button>
+                <div class="panel-header">
+                    <div class="panel-icon">💻</div>
+                    <h2 class="panel-title">آموزش اتصال با کامپیوتر</h2>
+                </div>
+
+                <div class="step-list">
+                    <div class="timeline"></div>
+                    
+                    <div class="step-item" data-step="1">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">نصب و راه‌اندازی ماینکرفت</h3>
+                        <p class="step-desc">
+                            ابتدا مطمئن شوید که نسخه مناسب جاوا ادیشن ماینکرفت را نصب کرده‌اید. برای اتصال به سرور ما، شما می‌توانید از نسخه‌های 1.8.x تا 1.21.x استفاده کنید، اما برای بهترین تجربه پیشنهاد می‌کنیم از نسخه 1.21.x استفاده کنید.
+                        </p>
+                        <p class="step-desc">
+                            اگر ماینکرفت ندارید، می‌توانید آن را از سایت رسمی ماینکرفت یا لانچر جایگزین مانند TLauncher دانلود کنید.
+                        </p>
+                        <div class="step-note">
+                            <strong>نکته:</strong> اگر از لانچر رسمی ماینکرفت استفاده می‌کنید، نیاز به خرید بازی دارید. اما لانچرهای جایگزین معمولاً رایگان هستند.
+                        </div>
+                    </div>
+
+                    <div class="step-item" data-step="2">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">اجرای بازی و ورود به بخش چندنفره</h3>
+                        <p class="step-desc">
+                            بازی را اجرا کنید و وارد حساب کاربری خود شوید. در منوی اصلی، روی گزینه "چندنفره" (Multiplayer) کلیک کنید.
+                        </p>
+                    </div>
+
+                    <div class="step-item" data-step="3">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">افزودن سرور جدید</h3>
+                        <p class="step-desc">
+                            در صفحه سرورها، روی دکمه "افزودن سرور" (Add Server) کلیک کنید. در قسمت نام سرور، یک نام دلخواه مانند "ایران امسی" وارد کنید و در قسمت آدرس سرور، آدرس زیر را وارد کنید:
+                        </p>
+                        <p class="step-desc" style="direction: ltr; text-align: center; background-color: var(--surface); padding: 10px; border-radius: 8px; margin: 15px 0; font-family: monospace; font-size: 1.2rem;">
+                            239.13.533.52
+                        </p>
+                        <p class="step-desc">
+                            سپس روی دکمه "انجام شد" (Done) کلیک کنید.
+                        </p>
+                    </div>
+
+                    <div class="step-item" data-step="4">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">ورود به سرور</h3>
+                        <p class="step-desc">
+                            اکنون سرور ایران امسی در لیست سرورها نمایش داده می‌شود. روی آن دوبار کلیک کنید یا آن را انتخاب کرده و روی "اتصال" کلیک کنید تا وارد سرور شوید.
+                        </p>
+                        <div class="step-note">
+                            <strong>نکته:</strong> اولین بار که وارد سرور می‌شوید، نیاز به ثبت نام دارید. کافیست دستور <span dir="ltr">/register [رمز عبور] [تکرار رمز عبور]</span> را وارد کنید. به عنوان مثال: <span dir="ltr">/register 123456 123456</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item" data-step="5">
+                        <div class="step-number">5</div>
+                        <h3 class="step-title">حل مشکلات احتمالی</h3>
+                        <p class="step-desc">
+                            اگر با مشکل اتصال مواجه شدید، موارد زیر را بررسی کنید:
+                        </p>
+                        <ul style="padding-right: 20px; line-height: 1.8;">
+                            <li>از صحت آدرس سرور اطمینان حاصل کنید.</li>
+                            <li>مطمئن شوید که به اینترنت متصل هستید.</li>
+                            <li>فایروال ویندوز یا آنتی‌ویروس ممکن است اتصال را مسدود کرده باشد.</li>
+                            <li>اگر از VPN استفاده می‌کنید، آن را خاموش کنید یا تغییر سرور دهید.</li>
+                            <li>از سازگاری نسخه ماینکرفت خود با سرور اطمینان حاصل کنید.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <h4 class="tip-title">نکات مفید</h4>
+                    <p>برای تجربه بهتر بازی، می‌توانید از مادهای بهینه‌سازی مانند Optifine یا Sodium استفاده کنید. این مادها عملکرد بازی را بهبود می‌بخشند و به شما امکان می‌دهند با FPS بالاتری بازی کنید.</p>
+                    <p style="margin-top: 10px">همچنین اگر سوال یا مشکلی داشتید، می‌توانید در گروه تلگرام ما مطرح کنید یا با استفاده از دستور <span dir="ltr">/help</span> در بازی، از ادمین‌ها کمک بخواهید.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Tutorial Content -->
+        <div id="mobile-tutorial" class="tutorial-content">
+            <div class="tutorial-panel">
+                <button class="close-btn" onclick="hideTutorial('mobile')">×</button>
+                <div class="panel-header">
+                    <div class="panel-icon">📱</div>
+                    <h2 class="panel-title">آموزش اتصال با موبایل</h2>
+                </div>
+
+                <div class="step-list">
+                    <div class="timeline"></div>
+                    
+                    <div class="step-item" data-step="1">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">دانلود پوجاو لانچر</h3>
+                        <p class="step-desc">
+                            برای بازی ماینکرفت روی گوشی، شما می‌توانید از پوجاو لانچر (Pojav Launcher) استفاده کنید. این لانچر به شما امکان اجرای نسخه جاوا ماینکرفت را روی گوشی می‌دهد.
+                        </p>
+                        <p class="step-desc">
+                            شما می‌توانید پوجاو لانچر را از <a href="https://pojavlauncherteam.github.io/download/" target="_blank" style="color: var(--accent); text-decoration: underline;">اینجا دانلود کنید</a>. یا می‌توانید آن را مستقیماً از گوگل پلی دانلود کنید.
+                        </p>
+                        <div class="step-note">
+                            <strong>نکته:</strong> پوجاو لانچر یک برنامه متن‌باز (Open Source) است که به شما امکان اجرای ماینکرفت جاوا را روی موبایل می‌دهد و نیازی به خرید نسخه بدراک نیست.
+                        </div>
+                    </div>
+                    
+                    <div class="step-item" data-step="2">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">نصب و اجرای نسخه مورد نیاز</h3>
+                        <p class="step-desc">
+                            پس از نصب پوجاو لانچر، آن را باز کنید و وارد حساب ماینکرفت خود شوید یا به صورت آفلاین بازی کنید. سپس:
+                        </p>
+                        <ul style="padding-right: 20px; line-height: 1.8;">
+                            <li>از لیست نسخه‌ها، نسخه 1.21.x (یا هر نسخه بین 1.8.x تا 1.21.x) را انتخاب کنید</li>
+                            <li>روی دکمه نصب کلیک کنید و منتظر دانلود و نصب بمانید</li>
+                            <li>پس از نصب، روی دکمه "Play" کلیک کنید تا بازی اجرا شود</li>
+                        </ul>
+                        <p class="step-desc" style="margin-top: 15px;">
+                            توجه داشته باشید که اجرای ماینکرفت جاوا روی گوشی به سخت‌افزار نسبتاً قوی نیاز دارد و ممکن است روی برخی گوشی‌ها کند اجرا شود.
+                        </p>
+                    </div>
+                    
+                    <div class="step-item" data-step="3">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">ورود به سرور</h3>
+                        <p class="step-desc">
+                            برای ادامه مراحل ورود به سرور، لطفاً به <strong>بخش آموزش پیسی</strong> مراجعه کنید. مراحل ورود به سرور در پوجاو لانچر دقیقاً مشابه نسخه کامپیوتر است:
+                        </p>
+                        <ul style="padding-right: 20px; line-height: 1.8;">
+                            <li>وارد بخش Multiplayer شوید</li>
+                            <li>روی Add Server کلیک کنید</li>
+                            <li>آی‌پی سرور (239.13.533.52) را وارد کنید</li>
+                            <li>به سرور متصل شوید</li>
+                        </ul>
+                        <p class="step-desc" style="margin-top: 15px;">
+                            تنها تفاوت در کنترل‌های لمسی است که ممکن است کمی عادت کردن به آن زمان ببرد.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <h4 class="tip-title">نکات مفید</h4>
+                    <p>برای تجربه بهتر بازی در موبایل، می‌توانید از یک کنترلر بلوتوث استفاده کنید. همچنین بازی با وای‌فای پایدار نسبت به اینترنت موبایل تجربه روان‌تری خواهد داشت.</p>
+                    <p style="margin-top: 10px">اگر در اتصال به سرور مشکل دارید، می‌توانید در گروه تلگرام ما از ادمین‌ها کمک بخواهید. در بیشتر مواقع، مشکلات اتصال مربوط به تنظیمات شبکه یا فایروال است.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>تمامی حقوق محفوظ است &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Create starry sky background
+        function createStars() {
+            const stars = document.getElementById('stars');
+            const count = window.innerWidth < 768 ? 100 : 200;
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 2 + 1;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.8 + 0.2;
+                
+                // Random duration
+                const duration = 2 + Math.random() * 3;
+                
+                // Random delay
+                const delay = Math.random() * 5;
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--opacity', opacity);
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.setProperty('--delay', `${delay}s`);
+                
+                stars.appendChild(star);
+            }
+        }
+
+        // Create floating Minecraft-like blocks
+        function createFloatingBlocks() {
+            const container = document.getElementById('floating-particles');
+            const blockColors = ['#8B5A2B', '#A9A9A9', '#567D46', '#8B4513', '#1CA3EC', '#5D4037', '#607D8B'];
+            
+            for (let i = 0; i < 20; i++) {
+                const block = document.createElement('div');
+                block.classList.add('minecraft-block');
+                
+                // Create texture overlay
+                const texture = document.createElement('div');
+                texture.classList.add('block-texture');
+                block.appendChild(texture);
+                
+                // Random position
+                const startX = Math.random() * 100;
+                
+                // Random drift
+                const drift = (Math.random() - 0.5) * 50;
+                
+                // Random size
+                const size = Math.random() * 20 + 15;
+                
+                // Random speed
+                const duration = 15 + Math.random() * 25;
+                
+                // Random delay
+                const delay = Math.random() * 15;
+                
+                // Random rotation
+                const rotation = Math.random() * 360;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.3 + 0.1;
+                
+                // Random color
+                const color = blockColors[Math.floor(Math.random() * blockColors.length)];
+                
+                block.style.width = `${size}px`;
+                block.style.height = `${size}px`;
+                block.style.backgroundColor = color;
+                block.style.setProperty('--startX', `${startX}%`);
+                block.style.setProperty('--drift', `${drift}%`);
+                block.style.setProperty('--duration', `${duration}s`);
+                block.style.setProperty('--delay', `${delay}s`);
+                block.style.setProperty('--rotation', `${rotation}deg`);
+                block.style.setProperty('--opacity', opacity);
+                
+                container.appendChild(block);
+            }
+            
+            // Add particles
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random position
+                const startX = Math.random() * 100;
+                
+                // Random drift
+                const drift = (Math.random() - 0.5) * 30;
+                
+                // Random size
+                const size = Math.random() * 3 + 1;
+                
+                // Random speed
+                const duration = 8 + Math.random() * 12;
+                
+                // Random delay
+                const delay = Math.random() * 10;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.4 + 0.1;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.setProperty('--startX', `${startX}%`);
+                particle.style.setProperty('--drift', `${drift}%`);
+                particle.style.setProperty('--duration', `${duration}s`);
+                particle.style.setProperty('--delay', `${delay}s`);
+                particle.style.setProperty('--opacity', opacity);
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Tutorial Functions
+        function showTutorial(type) {
+            // Hide any open tutorials
+            document.querySelectorAll('.tutorial-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected tutorial
+            const tutorial = document.getElementById(`${type}-tutorial`);
+            tutorial.classList.add('active');
+            
+            // Animate steps with delay
+            const steps = tutorial.querySelectorAll('.step-item');
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    step.classList.add('active');
+                }, 200 * (index + 1));
+            });
+            
+            // Better scrolling - scroll to top of tutorial panel
+            setTimeout(() => {
+                const tutorialPanel = tutorial.querySelector('.tutorial-panel');
+                const offset = tutorialPanel.offsetTop - 80; // Add some padding
+                window.scrollTo({
+                    top: offset,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+        
+        function hideTutorial(type) {
+            const tutorial = document.getElementById(`${type}-tutorial`);
+            tutorial.classList.remove('active');
+            
+            // Reset step animations
+            const steps = tutorial.querySelectorAll('.step-item');
+            steps.forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Scroll back to options
+            document.querySelector('.tutorial-options').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            createStars();
+            createFloatingBlocks();
+        };
+    </script>
+</body>
+</html>
