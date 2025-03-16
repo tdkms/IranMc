@@ -3,7 +3,7 @@
     const basePrices = {
         'vip': 49000,
         'vip-plus': 100000,
-        'mvp': 139000,
+        'mvp': 149000,
         'sponsor': 250000
     };
     
@@ -386,7 +386,7 @@
         font-size: 1.1em;
     }
 
-    .popup-telegram-btn {
+    .contact-btn {
         background: linear-gradient(135deg, #23A0D8, #0088CC);
         color: white;
         border: none;
@@ -395,13 +395,17 @@
         font-size: 1.2rem;
         font-weight: bold;
         cursor: pointer;
-        margin-top: 20px;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin: 20px auto 0;
+        display: block;
+        width: 200px;
+        text-align: center;
+        transition: all 0.3s ease;
         box-shadow: 0 10px 25px rgba(35, 160, 216, 0.3);
-        text-decoration: none;
+    }
+    
+    .contact-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(35, 160, 216, 0.5);
     }
 
     .popup-telegram-btn:hover {
@@ -733,28 +737,69 @@
             <ul class="rank-features">
                 <li>
                     <span class="feature-icon">✅</span>
-                    قطع درختان به صورت کامل
+                    قابلیت چت رنگی
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    حفظ اینونتری در مرگ
+                    پرتاب زنبور انفجاری beezooka/
                 </li>
                 <li>
-                    <span class="feature-icon">❌</span>
-                    مشاهده اینونتری بازیکنان
+                    <span class="feature-icon">✅</span>
+                    استفاده از سطح آشغال trash/
                 </li>
                 <li>
-                    <span class="feature-icon">❌</span>
-                    کلید اختصاصی فروشگاه
+                    <span class="feature-icon">✅</span>
+                    پرتاب گربه انفجاری kittycannon/
                 </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    مشاهده اکس پی پلیرا xp ahow/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دید درشب بینهایت nightvision/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    پرکردن جون heal/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    پرکردن غذا feed/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دریافت ۱۰ هزار بلوک کلیم
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دریافت کیت وی آی پی (هر ۴ روز یکبار)
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دیدن افراد نزدیک تا ۵۰۰ بلاک near/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    بازکردن کرفتینگ تیبل craft/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    رفع محدودیت تایمر کامند های tp/ و back/ و..
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    و سایر قبلیت ها...
+                </li>
+            
             </ul>
             <button class="buy-btn" onclick="buyRank('vip')">خرید رنک VIP</button>
         </div>
 
-        <!-- VIP+ Rank -->
+        <!-- ٍElite Rank -->
         <div class="rank-card">
             <div class="rank-icon floating">🏆</div>
-            <h2 class="rank-title">VIP+</h2>
+            <h2 class="rank-title">ELITE</h2>
             <div class="rank-price" id="vip-plus-price">100,000 تومان</div>
             <select class="duration-select" onchange="updatePrice('vip-plus', this.value)">
                 <option value="1">1 ماه</option>
@@ -764,29 +809,65 @@
             <ul class="rank-features">
                 <li>
                     <span class="feature-icon">✅</span>
-                    قطع درختان به صورت کامل
+                    تمامی قابلیت های رنک VIP
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    حفظ اینونتری در مرگ
+                    داشتن قابلیت کیپ اینونتوری (وقتی داخل سرور بمیرید وسایل و اکسپی شما حفظ میشه)
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    مشاهده اینونتری بازیکنان
+                    قابلیت ساخت پلیرشاپ
                 </li>
                 <li>
-                    <span class="feature-icon">❌</span>
-                    کلید اختصاصی فروشگاه
+                    <span class="feature-icon">✅</span>
+                    استفاده از انویل anvil/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    مشاهده اینونتوری بقیه بازیکنان invsee/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    مشاهده اینونتوری اندرچست پلیرها enderchestsee/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دریافت ۲۵ هزار بلوک کلیم
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    رفع محدودیت کول داون چت (انتی اسپم)
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دریافت کیت الیت هر ۷ روز یکبار
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    استفاده از تمامی کامند های فایربال fireball/ (پرتاب اتیش - تف دراگون و..)
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    قابلیت ست کردن وارپ (۲ تا)
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    قابلیت ست کردن هوم (۲ تا)
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    و سایر قابلیت ها...
                 </li>
             </ul>
-            <button class="buy-btn" onclick="buyRank('vip-plus')">خرید رنک VIP+</button>
+            <button class="buy-btn" onclick="buyRank('vip-plus')">خرید رنک ELITE</button>
         </div>
 
         <!-- MVP Rank -->
         <div class="rank-card">
             <div class="rank-icon floating">👑</div>
             <h2 class="rank-title">MVP</h2>
-            <div class="rank-price" id="mvp-price">139,000 تومان</div>
+            <div class="rank-price" id="mvp-price">149,000 تومان</div>
             <select class="duration-select" onchange="updatePrice('mvp', this.value)">
                 <option value="1">1 ماه</option>
                 <option value="3">3 ماه (10% تخفیف)</option>
@@ -795,19 +876,39 @@
             <ul class="rank-features">
                 <li>
                     <span class="feature-icon">✅</span>
-                    قطع درختان به صورت کامل
+                    تمامی قابلیت رنک های قبلی
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    حفظ اینونتری در مرگ
+                    دریافت کیت ام وی پی هر ۱۰ روز یکبار
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    مشاهده اینونتری بازیکنان
+                    تعمیر تمامی وسایل بدون هزینه repair/
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    کلید اختصاصی فروشگاه
+                    قابلیت پرواز در سرور fly/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    تغییر نام نمایشی داخل سرور nick/
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    قابلیت کندن اسپانر با کلنگ سیلک تاچ
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    قابلیت داشتن کلیم اختصاصی در اند و ندر
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دریافت ۴۰ هزار بلوک کلیم
+                </li>
+                <li>
+                    <span class="feature-icon">✅</span>
+                    دسترسی به اند چست enc/
                 </li>
             </ul>
             <button class="buy-btn" onclick="buyRank('mvp')">خرید رنک MVP</button>
@@ -831,15 +932,15 @@
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    چت VIP اختصاصی
+                    حالت کریتیو gm 1/
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    افکت‌های ویژه اختصاصی
+                    قابلیت تلپورت پلیرا tp/
                 </li>
                 <li>
                     <span class="feature-icon">✅</span>
-                    نام با رنگ طلایی در سرور
+                    دسترسی به تمامی کامند های اوپ
                 </li>
             </ul>
             <button class="buy-btn sponsor-btn" onclick="buyRank('sponsor')">خرید رنک Sponsor</button>
@@ -873,13 +974,13 @@
         <div class="popup-divider"></div>
         <p class="popup-message">
             🔥 <span class="highlight">راهنمای خرید سریع رنک:</span> 🔥<br><br>
-            ☑️ به تلگرام من پیام دهید<br>
+            ☑️ به تلگرام من پیام دهید(MrTdkms@)<br>
             ☑️ مستقیم و بدون مقدمه بنویسید: نام پلنی که میخواید + نام کاربری خودتون<br>
             ☑️ شماره کارت را دریافت و پرداخت کنید<br>
             ☑️ اسکرین شات رسید پرداخت را ارسال کنید<br>
             ☑️ رنک شما در کمتر از 5 دقیقه فعال خواهد شد! ⚡️
         </p>
-        <a href="https://t.me/IranMCAdmin" class="popup-telegram-btn" target="_blank">
+        <a href="https://t.me/MrTdkms" class="popup-telegram-btn" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-1.68-1.13-2.86-1.94-4.48-3.06-.54-.38-.2-.59.37-.86.62-.32 1.1-.51 1.62-.81.14-.09.3-.25.46-.13.1.07.82.51 1.32.85.73.49 1.25.75 1.41.83.16.08.3.05.42-.05.07-.07.4-.47.72-.85.23-.31.37-.53.21-.66-.1-.07-.74-.47-1.39-.85-.54-.36-1-.62-1.05-.75-.02-.16.12-.32.37-.47.54-.37.96-.6 1.58-.97.62-.37 1.04-.62 1.1-.75.02-.07 0-.16-.1-.21-.07-.05-.37-.07-.72.05-.54.19-1.73.6-3.06 1.22z"/>
             </svg>
